@@ -1,5 +1,5 @@
 {
-  "name": "dsh-work-status",
+  "name": "dsh-liangwenfeng-gu",
   "version": "1.0.0",
   "description": "DeepSeek Harness web plugin: a work-time status badge (梁文峰 / 梁文谷) pinned to the composer input's top-right corner, with a text-wrap reservation so typed text never hides under it.",
   "keywords": [

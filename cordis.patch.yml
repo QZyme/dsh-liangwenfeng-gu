@@ -1,12 +1,12 @@
-# dsh-work-status bundle patch
+# dsh-liangwenfeng-gu bundle patch
 #
 # This file is the `dsh.bundle.patch` layer of the package: when installed
 # through the official CLI —
 #
-#   dsh plugin --profile web add github:QZyme/dsh-work-status
+#   dsh plugin --profile web add github:QZyme/dsh-liangwenfeng-gu
 #
 # — the command reconciles `dsh.profile.bundles` against installed packages
-# and, seeing this declaration, appends `dsh-work-status` to the bundle
+# and, seeing this declaration, appends `dsh-liangwenfeng-gu` to the bundle
 # stack. Profile boot then merges THIS patch (a single `insert` of the plugin
 # row) exactly like a manual cordis.patch.yml mount line. No profile file
 # edits needed — one command installs and mounts. The same row is also the
@@ -14,4 +14,4 @@
 # bundle (exports["./client"] -> client.js).
 - insert:
     - id: work-status
-      name: 'dsh-work-status'
+      name: 'dsh-liangwenfeng-gu'

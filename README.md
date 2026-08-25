@@ -1,4 +1,4 @@
-# dsh-work-status
+# dsh-liangwenfeng-gu
 
 DeepSeek Harness 输入框右上角「当前状态」角标插件（梁文峰 / 梁文谷）。
 
@@ -15,12 +15,12 @@ DeepSeek Harness 输入框右上角「当前状态」角标插件（梁文峰 / 
 ## 安装
 
 ```bash
-dsh plugin --profile web add github:QZyme/dsh-work-status
+dsh plugin --profile web add github:QZyme/dsh-liangwenfeng-gu
 ```
 
 或手动方式（等价）：在 `~/.dsh/profiles/web/package.json` 的 dependencies 中加入
-`"dsh-work-status": "git+https://github.com/QZyme/dsh-work-status.git"`，
-在 `cordis.patch.yml` 的 `insert` 列表中加一行 `{ id: work-status, name: 'dsh-work-status' }`，
+`"dsh-liangwenfeng-gu": "git+https://github.com/QZyme/dsh-liangwenfeng-gu.git"`，
+在 `cordis.patch.yml` 的 `insert` 列表中加一行 `{ id: work-status, name: 'dsh-liangwenfeng-gu' }`，
 然后在该目录执行 `pnpm install`。安装后**重启 dsh web** 生效。
 
 ## 结构

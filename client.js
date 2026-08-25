@@ -1,5 +1,5 @@
 /**
- * dsh-work-status — browser client bundle
+ * dsh-liangwenfeng-gu — browser client bundle
  *
  * 功能：在 DSH 输入框（composer）右上角显示「当前状态」角标。
  *   - 周一~周五 北京时间(UTC+8) 09:00-12:00 / 14:00-18:00 -> 红色「梁文峰」
@@ -16,7 +16,7 @@
  *      统一设为 112px，保证换行一致、自动增高与滚动条同步不被破坏。
  */
 window.__ModuleLoader__.load({
-	id: "dsh-work-status",
+	id: "dsh-liangwenfeng-gu",
 	factory: (require) => {
 		var module = { exports: {} };
 		var exports = module.exports;
@@ -41,10 +41,10 @@ window.__ModuleLoader__.load({
 				return styles.insert(WRAP_CSS);
 			}
 			if (typeof document === 'undefined') return () => {};
-			const id = 'dsh-work-status/composer-wrap';
+			const id = 'dsh-liangwenfeng-gu/composer-wrap';
 			if (document.querySelector('style[data-plugin-css="' + id + '"]') !== null) return () => {};
 			const tag = document.createElement('style');
-			tag.dataset.plugin = 'dsh-work-status';
+			tag.dataset.plugin = 'dsh-liangwenfeng-gu';
 			tag.dataset.pluginCss = id;
 			tag.textContent = WRAP_CSS;
 			document.head.appendChild(tag);
@@ -105,7 +105,7 @@ window.__ModuleLoader__.load({
 		const inject = ["slots"];
 		/** @param ctx - client root context（提供 slots 服务）。 */
 		function apply(ctx) {
-			ctx.effect(() => insertWrapCss(), "dsh-work-status: wrap css");
+			ctx.effect(() => insertWrapCss(), "dsh-liangwenfeng-gu: wrap css");
 			ctx.slots.inject("conversation.input.overlay", () => ctx.slots.register({
 				name: "conversation.input.overlay",
 				id: "work-status-badge",
