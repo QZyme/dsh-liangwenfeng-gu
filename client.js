@@ -86,14 +86,55 @@ window.__ModuleLoader__.load({
 			};
 		}
 
-		// ── 状态判断（固定 UTC+8，无夏令时） ────────────────────────────
-		/** 周一~周五 北京时间 09:00-12:00 / 14:00-18:00 视为工作时间。 */
-		function isBeijingOnDuty() {
-			const now = new Date(Date.now() + 8 * 3600 * 1000);
-			const day = now.getUTCDay();
-			const minutes = now.getUTCHours() * 60 + now.getUTCMinutes();
-			const inRange = minutes >= 9 * 60 && minutes < 12 * 60 || minutes >= 14 * 60 && minutes < 18 * 60;
-			return day >= 1 && day <= 5 && inRange;
+		// ── 节假日日历（国务院办公厅 2026 年放假安排，国办发明电〔2025〕7 号） ──
+		/*
+		 * 只维护两张表，其余全由它们推导：
+		 *   HOLIDAYS         法定节假日（含调休放假）→ 一律「谷」
+		 *   MAKEUP_WORKDAYS  调休上班的周末          → 按工作日规则（可为「峰」）
+		 * 元旦/春节/清明/劳动节/端午/中秋/国庆 的日期与调休上班日逐年由国务院公布，
+		 * 每年 11 月更新这两张表即可。未列入的年份按「周一~周五」的普通规则判断，
+		 * 因此 2027 年的安排在公布前，1 月 1 日会暂时按普通工作日显示。
+		 * 日期一律按北京时间（UTC+8，无夏令时）取 YYYY-MM-DD。
+		 */
+		const HOLIDAYS = new Set([
+			'2026-01-01', '2026-01-02', '2026-01-03',
+			'2026-02-15', '2026-02-16', '2026-02-17', '2026-02-18', '2026-02-19',
+			'2026-02-20', '2026-02-21', '2026-02-22', '2026-02-23',
+			'2026-04-04', '2026-04-05', '2026-04-06',
+			'2026-05-01', '2026-05-02', '2026-05-03', '2026-05-04', '2026-05-05',
+			'2026-06-19', '2026-06-20', '2026-06-21',
+			'2026-09-25', '2026-09-26', '2026-09-27',
+			'2026-10-01', '2026-10-02', '2026-10-03', '2026-10-04', '2026-10-05',
+			'2026-10-06', '2026-10-07'
+		]);
+		const MAKEUP_WORKDAYS = new Set([
+			'2026-01-04',
+			'2026-02-14', '2026-02-28',
+			'2026-05-09',
+			'2026-09-20', '2026-10-10'
+		]);
+
+		/** 取北京时间的日期键、星期与分钟数；nowMs 仅供测试注入。 */
+		function beijingNow(nowMs) {
+			const now = new Date((nowMs === undefined ? Date.now() : nowMs) + 8 * 3600 * 1000);
+			const pad = (n) => (n < 10 ? '0' + n : String(n));
+			return {
+				key: now.getUTCFullYear() + '-' + pad(now.getUTCMonth() + 1) + '-' + pad(now.getUTCDate()),
+				weekday: now.getUTCDay(),
+				minutes: now.getUTCHours() * 60 + now.getUTCMinutes()
+			};
+		}
+
+		/**
+		 * 是否处于工作时间（决定显示「梁文峰」还是「梁文谷」）。
+		 * 法定节假日 → 谷；调休上班的周末 → 按工作日；其余按周一~周五 + 两个时段。
+		 */
+		function isBeijingOnDuty(nowMs) {
+			const t = beijingNow(nowMs);
+			if (HOLIDAYS.has(t.key)) return false;
+			const workday = MAKEUP_WORKDAYS.has(t.key) || t.weekday >= 1 && t.weekday <= 5;
+			if (!workday) return false;
+			return t.minutes >= 9 * 60 && t.minutes < 12 * 60 || t.minutes >= 14 * 60 && t.minutes < 18 * 60;
 		}
 
 		// ── 角标组件 ────────────────────────────────────────────────────
@@ -160,7 +201,9 @@ window.__ModuleLoader__.load({
 			}, []);
 			return (0, react_jsx_runtime.jsx)("span", {
 				ref: badgeRef,
-				title: onDuty ? "工作时间: 周一至周五 09:00-12:00 / 14:00-18:00 (北京时间)" : "非工作时间 (周末或北京时间 12:00-14:00 / 18:00-次日09:00)",
+				title: onDuty
+					? "工作时间：工作日（含调休上班）09:00-12:00 / 14:00-18:00（北京时间）"
+					: "非工作时间：法定节假日 / 周末，或休息时段 12:00-14:00 / 18:00-次日 09:00（北京时间）",
 				style: {
 					position: "absolute",
 					top: "11px",
@@ -198,6 +241,11 @@ window.__ModuleLoader__.load({
 		}
 		exports.apply = apply;
 		exports.inject = inject;
+		/*
+		 * 测试钩子：判定逻辑闭包在 bundle 内部，外部拿不到；暴露一份只读引用给
+		 * test/holiday.test.mjs 做时间旅行断言（不影响运行时行为）。
+		 */
+		exports.__internals = { isBeijingOnDuty, beijingNow, HOLIDAYS, MAKEUP_WORKDAYS };
 		return module.exports;
 	}
 });

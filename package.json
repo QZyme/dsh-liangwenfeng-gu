@@ -1,7 +1,7 @@
 {
   "name": "dsh-liangwenfeng-gu",
-  "version": "1.0.1",
-  "description": "DeepSeek Harness web plugin: a work-time status badge (梁文峰 / 梁文谷) pinned to the composer input's top-right corner, with a text-wrap reservation so typed text never hides under it.",
+  "version": "1.0.2",
+  "description": "DeepSeek Harness web plugin: a work-time status badge (梁文峰 / 梁文谷) pinned to the composer input's top-right corner. Follows the official Chinese statutory-holiday calendar (holidays and make-up workdays), with a measured text-wrap reservation so typed text never hides under it.",
   "keywords": [
     "deepseek-harness",
     "dsh",
@@ -10,10 +10,14 @@
     "client",
     "work-time",
     "status",
-    "badge"
+    "badge",
+    "holiday"
   ],
   "license": "MIT",
   "main": "index.js",
+  "scripts": {
+    "test": "node test/holiday.test.mjs"
+  },
   "exports": {
     ".": "./index.js",
     "./client": "./client.js",
